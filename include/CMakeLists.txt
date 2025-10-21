@@ -1,0 +1,1 @@
+target_include_directories("${${PROJECT_NAME}_INTERNAL_LIB_NAME}" PUBLIC "${PROJECT_SOURCE_DIR}/include/public")
