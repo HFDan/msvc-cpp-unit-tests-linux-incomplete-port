@@ -21,6 +21,6 @@ namespace Microsoft::VisualStudio::CppUnitTestFramework {
 
         void Register(const std::string& name, std::function<void()> test);
 
-        void RunAllTests();
+        bool RunAllTests();
     };
 }

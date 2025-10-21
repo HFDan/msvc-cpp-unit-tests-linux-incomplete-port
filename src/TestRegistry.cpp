@@ -12,7 +12,8 @@ void TestRegistry::Register(const std::string& name, std::function<void()> test)
     tests.emplace_back(name, test);
 }
 
-void TestRegistry::RunAllTests() {
+bool TestRegistry::RunAllTests() {
+    bool failed = false;
     for (const auto& [name, func] : tests) {
 #if !defined(_WIN32)
         std::print("[ {:^4} ] {}", "Run", name);
@@ -21,6 +22,7 @@ void TestRegistry::RunAllTests() {
             std::println("\033[2K\r[ \033[32m{:^4}\033[0m ] {}", "Ok", name);
         } catch (const std::exception& e) {
             std::println("\033[2K\r[ \033[31m{:^4}\033[0m ] {}: {}", "Fail", name, e.what());
+            failed = true;
         }
 #else
         std::println("[ {:^4} ] {}", "Run", name);
@@ -29,7 +31,9 @@ void TestRegistry::RunAllTests() {
             std::println("[ {:^4} ] {}", "Ok", name);
         } catch (const std::exception& e) {
             std::println("[ {:^4} ] {}: {}", "Fail", name, e.what());
+            failed = true;
         }
 #endif
     }
+    return failed;
 }
