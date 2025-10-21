@@ -19,4 +19,29 @@ TEST_CLASS(lmao) {
     TEST_METHOD(Equals4) {
         Assert::AreEqual(std::tuple<int, int>(2, 2), std::tuple<int, int>(2, 2));
     }
+
+    TEST_METHOD(IsSame1) {
+        int a = 0;
+        int& b = a;
+        int& c = a;
+        Assert::AreSame(b, c);
+    }
+
+    TEST_METHOD(IsSame2) {
+        int a = 0;
+        int b = 0;
+        Assert::AreSame(a, b);
+    }
+
+    TEST_METHOD(IsTrue) {
+        Assert::IsTrue(true);
+    }
+
+    TEST_METHOD(IsFalse) {
+        Assert::IsFalse(false);
+    }
+
+    TEST_METHOD(Fail) {
+        Assert::Fail("Test fail");
+    }
 };
