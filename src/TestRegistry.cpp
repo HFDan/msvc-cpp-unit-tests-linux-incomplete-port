@@ -8,7 +8,7 @@ TestRegistry& TestRegistry::instance() {
     return instance;
 }
 
-void TestRegistry::Register(const std::string& name, std::function<void()> test) {
+void TestRegistry::Register(const std::string& name, const std::function<void()>& test) {
     tests.emplace_back(name, test);
 }
 
