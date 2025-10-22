@@ -4,12 +4,14 @@
 
 - A C++23 capable compiler (with `std::println` support)
 - CMake
+- The header `cxxabi.h` available to include. (Will be optional in the future)
 
 ## Linkage
 
 1. Clone the repo to a subdirectory
 2. `add_subdirectory(<path to where you downloaded>)`
-3. `target_link_libraries(<target> PRIVATE msvctest::msvctest)`
+3. `add_executable(<target name> <source code>)`
+4. `declare_msvc_test(<target name>)`
 
 ## Usage
 
