@@ -1,13 +1,16 @@
 #pragma once
 #include <algorithm>
 #include <stdexcept>
+#include <format>
+#include <string>
 
 namespace Microsoft::VisualStudio::CppUnitTestFramework {
     namespace Assert {
         // Equality
         template<typename T>
         static void AreEqual(const T& expected, const T& actual, const char* message = nullptr) {
-            const char* final_msg = message == nullptr ? "Failed AreEqual assert" : message;
+            std::string formatted = std::format("AreEqual: Expected {} got {}", expected, actual);
+            const char* final_msg = message == nullptr ? formatted.c_str() : message;
             if (expected != actual) throw std::runtime_error(final_msg);
         }
 
@@ -18,7 +21,8 @@ namespace Microsoft::VisualStudio::CppUnitTestFramework {
 
         template <typename T, typename = std::enable_if_t<std::is_floating_point_v<T>>>
         static void AreEqual(T expected, T actual, T tolerance, const char* message = nullptr) {
-            const char* final_msg = message == nullptr ? "Failed AreEqual assert" : message;
+            std::string formatted = std::format("AreEqual: Expected {} got {}", expected, actual);
+            const char* final_msg = message == nullptr ? formatted.c_str() : message;
             const T diff = expected - actual;
             if (diff > tolerance) throw std::runtime_error(final_msg);
         }
@@ -31,7 +35,8 @@ namespace Microsoft::VisualStudio::CppUnitTestFramework {
                 std::ranges::transform(s2, s2.begin(), tolower);
             }
 
-            const char* final_msg = message == nullptr ? "Failed AreEqual assert" : message;
+            std::string formatted = std::format("AreEqual: Expected \"{}\" got \"{}\"", expected, actual);
+            const char* final_msg = message == nullptr ? formatted.c_str() : message;
             if (s1 != s2) throw std::runtime_error(final_msg);
 
         }
@@ -39,7 +44,8 @@ namespace Microsoft::VisualStudio::CppUnitTestFramework {
         // Inequality
         template <typename T>
         static void AreNotEqual(const T& notExpected, const T& actual, const char* message = nullptr) {
-            const char* final_msg = message == nullptr ? "Failed AreNotEqual assert" : message;
+            std::string formatted = std::format("AreNotEqual: got {}", actual);
+            const char* final_msg = message == nullptr ? formatted.c_str() : message;
             if (notExpected == actual) throw std::runtime_error(final_msg);
         }
 
@@ -50,7 +56,8 @@ namespace Microsoft::VisualStudio::CppUnitTestFramework {
 
         template <typename T, typename = std::enable_if_t<std::is_floating_point_v<T>>>
         static void AreNotEqual(T notExpected, T actual, T tolerance, const char* message = nullptr) {
-            const char* final_msg = message == nullptr ? "Failed AreNotEqual assert" : message;
+            std::string formatted = std::format("AreNotEqual: got {}", actual);
+            const char* final_msg = message == nullptr ? formatted.c_str() : message;
             const T diff = notExpected - actual;
             if (diff < tolerance) throw std::runtime_error(final_msg);
         }
@@ -63,51 +70,55 @@ namespace Microsoft::VisualStudio::CppUnitTestFramework {
                 std::ranges::transform(s2, s2.begin(), tolower);
             }
 
-            const char* final_msg = message == nullptr ? "Failed AreNotEqual assert" : message;
+            std::string formatted = std::format("AreNotEqual: got \"{}\"", actual);
+            const char* final_msg = message == nullptr ? formatted.c_str() : message;
             if (s1 == s2) throw std::runtime_error(final_msg);
         }
 
         // Same
         template <typename T>
         static void AreSame(const T& expected, const T& actual, const char* message = nullptr) {
-            const char* final_msg = message == nullptr ? "Failed AreSame assert" : message;
+            std::string formatted = std::format("AreSame: Expected {} got {}", (void*)std::addressof(expected), (void*)std::addressof(actual));
+            const char* final_msg = message == nullptr ? formatted.c_str() : message;
             if (std::addressof(expected) != std::addressof(actual)) throw std::runtime_error(final_msg);
         }
 
         // Not same
         template <typename T>
         static void AreNotSame(const T& notExpected, const T& actual, const char* message = nullptr) {
-            const char* final_msg = message == nullptr ? "Failed AreNotSame assert" : message;
+            std::string formatted = std::format("AreNotSame: got {}", (void*)std::addressof(actual));
+            const char* final_msg = message == nullptr ? formatted.c_str() : message;
             if (std::addressof(notExpected) == std::addressof(actual)) throw std::runtime_error(final_msg);
         }
 
         // Is null
         static void IsNull(const auto* actual, const char* message = nullptr) {
-            const char* final_msg = message == nullptr ? "Failed IsNull assert" : message;
+            const char* final_msg = message == nullptr ? "IsNull: got nullptr" : message;
             if (actual != nullptr) throw std::runtime_error(final_msg);
         }
 
         // Is not null
         static void IsNotNull(const auto* actual, const char* message = nullptr) {
-            const char* final_msg = message == nullptr ? "Failed IsNotNull assert" : message;
+            std::string formatted = std::format("IsNotNull: got {}", (void*)actual);
+            const char* final_msg = message == nullptr ? formatted.c_str() : message;
             if (actual == nullptr) throw std::runtime_error(final_msg);
         }
 
         // Is true
         static void IsTrue(bool cond, const char* message = nullptr) {
-            const char* final_msg = message == nullptr ? "Failed IsTrue assert" : message;
+            const char* final_msg = message == nullptr ? "IsTrue: got false" : message;
             if (!cond) throw std::runtime_error(final_msg);
         }
 
         // Is false
         static void IsFalse(bool cond, const char* message = nullptr) {
-            const char* final_msg = message == nullptr ? "Failed IsFalse assert" : message;
+            const char* final_msg = message == nullptr ? "IsFalse: got true" : message;
             if (cond) throw std::runtime_error(final_msg);
         }
 
         // Fail
         static void Fail(const char* message = nullptr) {
-            const char* final_msg = message == nullptr ? "Failed" : message;
+            const char* final_msg = message == nullptr ? "Fail: failed" : message;
             throw std::runtime_error(final_msg);
         }
     }
